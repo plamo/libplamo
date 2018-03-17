@@ -38,9 +38,14 @@ pub extern fn plamo_request_new(
 #[no_mangle]
 pub extern fn plamo_request_header_find(plamo_request: *const PlamoRequest, key: *const c_char) -> *const PlamoHttpHeaders {
     unsafe {
-        match (*(*plamo_request).header).get(CStr::from_ptr(key).to_str().unwrap()) {
-            Some(ref headers) => ptr::read(headers) as *const _,
-            None => ptr::null(),
+        match CStr::from_ptr(key).to_str() {
+            Ok(key) => {
+                match (*(*plamo_request).header).get(key) {
+                    Some(ref headers) => ptr::read(headers) as *const _,
+                    None => ptr::null(),
+                }
+            },
+            Err(_) => ptr::null(),
         }
     }
 }
@@ -48,9 +53,14 @@ pub extern fn plamo_request_header_find(plamo_request: *const PlamoRequest, key:
 #[no_mangle]
 pub extern fn plamo_request_query_find(plamo_request: *const PlamoRequest, key: *const c_char) -> *const PlamoHttpQueries {
     unsafe {
-        match (*(*plamo_request).query).get(CStr::from_ptr(key).to_str().unwrap()) {
-            Some(ref queries) => ptr::read(queries) as *const _,
-            None => ptr::null(),
+        match CStr::from_ptr(key).to_str() {
+            Ok(key) => {
+                match (*(*plamo_request).query).get(key) {
+                    Some(ref queries) => ptr::read(queries) as *const _,
+                    None => ptr::null(),
+                }
+            },
+            Err(_) => ptr::null(),
         }
     }
 }
