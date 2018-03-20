@@ -24,7 +24,7 @@ pub extern fn plamo_request_new(
     scheme: *const c_char,
     path: *const c_char,
     version: *const c_char,
-    plamo_request: &mut *const PlamoRequest
+    plamo_request: &mut *mut PlamoRequest
 ) -> PlamoResult {
     *plamo_request = Box::into_raw(Box::new(PlamoRequest {
         scheme: scheme,
@@ -39,13 +39,21 @@ pub extern fn plamo_request_new(
 }
 
 #[no_mangle]
+pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
+    if !plamo_request.is_null() {
+        unsafe { Box::from_raw(*plamo_request); }
+        *plamo_request = ptr::null_mut();
+    }
+}
+
+#[no_mangle]
 pub extern fn plamo_request_header_find(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_headers: &mut *const PlamoHttpHeaders) -> PlamoResult {
     unsafe {
         match CStr::from_ptr(key).to_str() {
             Ok(key) => {
                 match (*(*plamo_request).header).get(key) {
-                    Some(ref headers) => {
-                        *plamo_http_headers = ptr::read(headers) as *const _;
+                    Some(headers) => {
+                        *plamo_http_headers = headers;
                         PlamoResult::Ok
                     },
                     None => PlamoResult::NotFound,
@@ -62,8 +70,8 @@ pub extern fn plamo_request_query_find(plamo_request: *const PlamoRequest, key: 
         match CStr::from_ptr(key).to_str() {
             Ok(key) => {
                 match (*(*plamo_request).query).get(key) {
-                    Some(ref queries) => {
-                        *plamo_http_queries = ptr::read(queries) as *const _;
+                    Some(queries) => {
+                        *plamo_http_queries = queries;
                         PlamoResult::Ok
                     },
                     None => PlamoResult::NotFound,
