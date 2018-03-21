@@ -10,30 +10,30 @@ use std::ptr;
 #[repr(C)]
 pub struct PlamoRequest {
     method: PlamoHttpMethod,
-    scheme: *const c_char,
-    path: *const c_char,
-    query: *const BTreeMap<String, PlamoHttpQueries>,
-    version: *const c_char,
-    header: *const BTreeMap<String, PlamoHttpHeaders>,
-    body: *const Vec<c_uchar>,
+    scheme: *mut c_char,
+    path: *mut c_char,
+    query: *mut BTreeMap<String, PlamoHttpQueries>,
+    version: *mut c_char,
+    header: *mut BTreeMap<String, PlamoHttpHeaders>,
+    body: *mut Vec<c_uchar>,
 }
 
 #[no_mangle]
 pub extern fn plamo_request_new(
     method: PlamoHttpMethod,
-    scheme: *const c_char,
-    path: *const c_char,
-    version: *const c_char,
+    scheme: *mut c_char,
+    path: *mut c_char,
+    version: *mut c_char,
     plamo_request: &mut *mut PlamoRequest
 ) -> PlamoResult {
     *plamo_request = Box::into_raw(Box::new(PlamoRequest {
         scheme: scheme,
         method: method,
         path: path,
-        query: &BTreeMap::new(),
+        query: Box::into_raw(Box::new(BTreeMap::new())),
         version: version,
-        header: &BTreeMap::new(),
-        body: &Vec::new(),
+        header: Box::into_raw(Box::new(BTreeMap::new())),
+        body: Box::into_raw(Box::new(Vec::new())),
     }));
     PlamoResult::Ok
 }
@@ -41,7 +41,12 @@ pub extern fn plamo_request_new(
 #[no_mangle]
 pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
     if !plamo_request.is_null() {
-        unsafe { Box::from_raw(*plamo_request); }
+        unsafe {
+            let plamo_request = Box::from_raw(*plamo_request);
+            Box::from_raw(plamo_request.query);
+            Box::from_raw(plamo_request.header);
+            Box::from_raw(plamo_request.body);
+        }
         *plamo_request = ptr::null_mut();
     }
 }
