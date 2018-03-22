@@ -3,7 +3,7 @@ use plamo_http_method::PlamoHttpMethod;
 use plamo_http_queries::PlamoHttpQueries;
 use plamo_result::PlamoResult;
 use std::collections::BTreeMap;
-use std::ffi::CStr;
+use std::ffi::{CStr, CString};
 use std::os::raw::{c_char, c_uchar};
 use std::ptr;
 
@@ -12,9 +12,9 @@ pub struct PlamoRequest {
     method: PlamoHttpMethod,
     scheme: *mut c_char,
     path: *mut c_char,
-    query: *mut BTreeMap<String, PlamoHttpQueries>,
+    query: *mut BTreeMap<CString, PlamoHttpQueries>,
     version: *mut c_char,
-    header: *mut BTreeMap<String, PlamoHttpHeaders>,
+    header: *mut BTreeMap<CString, PlamoHttpHeaders>,
     body: *mut Vec<c_uchar>,
 }
 
@@ -54,17 +54,12 @@ pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
 #[no_mangle]
 pub extern fn plamo_request_header_find(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_headers: &mut *const PlamoHttpHeaders) -> PlamoResult {
     unsafe {
-        match CStr::from_ptr(key).to_str() {
-            Ok(key) => {
-                match (*(*plamo_request).header).get(key) {
-                    Some(headers) => {
-                        *plamo_http_headers = headers;
-                        PlamoResult::Ok
-                    },
-                    None => PlamoResult::NotFound,
-                }
+        match (*(*plamo_request).header).get(CStr::from_ptr(key)) {
+            Some(headers) => {
+                *plamo_http_headers = headers;
+                PlamoResult::Ok
             },
-            Err(_) => PlamoResult::InvalidString,
+            None => PlamoResult::NotFound,
         }
     }
 }
@@ -72,17 +67,12 @@ pub extern fn plamo_request_header_find(plamo_request: *const PlamoRequest, key:
 #[no_mangle]
 pub extern fn plamo_request_query_find(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_queries: &mut *const PlamoHttpQueries) -> PlamoResult {
     unsafe {
-        match CStr::from_ptr(key).to_str() {
-            Ok(key) => {
-                match (*(*plamo_request).query).get(key) {
-                    Some(queries) => {
-                        *plamo_http_queries = queries;
-                        PlamoResult::Ok
-                    },
-                    None => PlamoResult::NotFound,
-                }
+        match (*(*plamo_request).query).get(CStr::from_ptr(key)) {
+            Some(queries) => {
+                *plamo_http_queries = queries;
+                PlamoResult::Ok
             },
-            Err(_) => PlamoResult::InvalidString,
+            None => PlamoResult::NotFound,
         }
     }
 }
