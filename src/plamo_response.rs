@@ -17,7 +17,7 @@ pub extern fn plamo_response_new(status_code: c_uint, plamo_response: &mut *mut 
     *plamo_response = Box::into_raw(Box::new(PlamoResponse {
         status_code: status_code,
         header: Box::into_raw(Box::new(BTreeMap::new())),
-        body: Box::into_raw(Box::new(Vec::new())),
+        body: ptr::null_mut(),
     }));
     PlamoResult::Ok
 }
@@ -28,8 +28,21 @@ pub extern fn plamo_response_destroy(plamo_response: &mut *mut PlamoResponse) {
         unsafe {
             let plamo_response = Box::from_raw(*plamo_response);
             Box::from_raw(plamo_response.header);
-            Box::from_raw(plamo_response.body);
+            if !plamo_response.body.is_null() {
+                Box::from_raw(plamo_response.body);
+            }
         }
         *plamo_response = ptr::null_mut();
     }
+}
+
+#[no_mangle]
+pub extern fn plamo_response_set_body(plamo_response: *mut PlamoResponse, body: *mut c_uchar, size: usize) -> PlamoResult {
+    unsafe {
+        if !(*plamo_response).body.is_null() {
+            Box::from_raw((*plamo_response).body);
+        }
+        (*plamo_response).body = Box::into_raw(Box::new(Vec::from_raw_parts(body, size, size)));
+    }
+    PlamoResult::Ok
 }
