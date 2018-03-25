@@ -1,5 +1,5 @@
 use plamo_result::PlamoResult;
-use std::ffi::{CStr, CString};
+use std::ffi::CString;
 use std::os::raw::c_char;
 
 #[repr(C)]
@@ -61,9 +61,9 @@ pub extern fn plamo_string_array_get_last(plamo_string_array: *const PlamoString
 }
 
 #[no_mangle]
-pub extern fn plamo_string_array_add(plamo_string_array: *mut PlamoStringArray, value: *const c_char) {
+pub extern fn plamo_string_array_add(plamo_string_array: *mut PlamoStringArray, value: *mut c_char) {
     unsafe {
-        (*plamo_string_array).inner.push(CString::from(CStr::from_ptr(value)));
+        (*plamo_string_array).inner.push(CString::from_raw(value));
     }
 }
 
