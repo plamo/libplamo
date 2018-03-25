@@ -52,7 +52,7 @@ pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
 }
 
 #[no_mangle]
-pub extern fn plamo_request_header_find(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_headers: &mut *const PlamoHttpHeaders) -> PlamoResult {
+pub extern fn plamo_request_find_headers(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_headers: &mut *const PlamoHttpHeaders) -> PlamoResult {
     unsafe {
         match (*(*plamo_request).header).get(CStr::from_ptr(key)) {
             Some(headers) => {
@@ -65,7 +65,7 @@ pub extern fn plamo_request_header_find(plamo_request: *const PlamoRequest, key:
 }
 
 #[no_mangle]
-pub extern fn plamo_request_query_find(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_queries: &mut *const PlamoHttpQueries) -> PlamoResult {
+pub extern fn plamo_request_find_queries(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_queries: &mut *const PlamoHttpQueries) -> PlamoResult {
     unsafe {
         match (*(*plamo_request).query).get(CStr::from_ptr(key)) {
             Some(queries) => {
