@@ -3,4 +3,8 @@ name = "plamo"
 version = "0.1.0"
 authors = ["Shogo Otake <shogo.otake@gmail.com>"]
 
+[lib]
+name = "plamo"
+crate-type = ["cdylib"]
+
 [dependencies]
