@@ -33,3 +33,16 @@ pub extern fn plamo_http_headers_remove(plamo_http_headers: *mut PlamoHttpHeader
         }
     }
 }
+
+#[no_mangle]
+pub extern fn plamo_http_headers_find(plamo_http_headers: *mut PlamoHttpHeaders, index: usize, value: *mut *const c_char) -> PlamoResult {
+    unsafe {
+        match (*plamo_http_headers).inner.get(index) {
+            Some(header) => {
+                *value = header.as_ptr();
+                PlamoResult::Ok
+            },
+            None => PlamoResult::NotFound,
+        }
+    }
+}
