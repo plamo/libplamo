@@ -1,8 +1,8 @@
 use plamo_http_headers::PlamoHttpHeaders;
 use plamo_result::PlamoResult;
 use std::collections::BTreeMap;
-use std::ffi::CString;
-use std::os::raw::{c_uchar, c_uint};
+use std::ffi::{CStr, CString};
+use std::os::raw::{c_char, c_uchar, c_uint};
 use std::ptr;
 
 #[repr(C)]
@@ -45,4 +45,17 @@ pub extern fn plamo_response_set_body(plamo_response: *mut PlamoResponse, body: 
         (*plamo_response).body = Box::into_raw(Box::new(Vec::from_raw_parts(body, size, size)));
     }
     PlamoResult::Ok
+}
+
+#[no_mangle]
+pub extern fn plamo_response_find_headers(plamo_response: *mut PlamoResponse, key: *const c_char, plamo_http_headers: &mut *const PlamoHttpHeaders) -> PlamoResult {
+    unsafe {
+        match (*(*plamo_response).header).get(CStr::from_ptr(key)) {
+            Some(headers) => {
+                *plamo_http_headers = headers;
+                PlamoResult::Ok
+            },
+            None => PlamoResult::NotFound,
+        }
+    }
 }
