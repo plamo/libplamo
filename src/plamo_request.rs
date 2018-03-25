@@ -1,9 +1,7 @@
 use plamo_http_header::{PlamoHttpHeader, plamo_http_header_new};
 use plamo_http_method::PlamoHttpMethod;
-use plamo_http_queries::PlamoHttpQueries;
+use plamo_http_query::{PlamoHttpQuery, plamo_http_query_new};
 use plamo_result::PlamoResult;
-use std::collections::BTreeMap;
-use std::ffi::{CStr, CString};
 use std::os::raw::{c_char, c_uchar};
 use std::ptr;
 
@@ -12,7 +10,7 @@ pub struct PlamoRequest {
     method: PlamoHttpMethod,
     scheme: *mut c_char,
     path: *mut c_char,
-    query: *mut BTreeMap<CString, PlamoHttpQueries>,
+    query: *mut PlamoHttpQuery,
     version: *mut c_char,
     header: *mut PlamoHttpHeader,
     body: *mut Vec<c_uchar>,
@@ -28,11 +26,13 @@ pub extern fn plamo_request_new(
 ) -> PlamoResult {
     let mut header = ptr::null_mut();
     plamo_http_header_new(&mut header);
+    let mut query = ptr::null_mut();
+    plamo_http_query_new(&mut query);
     *plamo_request = Box::into_raw(Box::new(PlamoRequest {
         scheme: scheme,
         method: method,
         path: path,
-        query: Box::into_raw(Box::new(BTreeMap::new())),
+        query: query,
         version: version,
         header: header,
         body: Box::into_raw(Box::new(Vec::new())),
@@ -50,18 +50,5 @@ pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
             Box::from_raw(plamo_request.body);
         }
         *plamo_request = ptr::null_mut();
-    }
-}
-
-#[no_mangle]
-pub extern fn plamo_request_find_queries(plamo_request: *const PlamoRequest, key: *const c_char, plamo_http_queries: &mut *const PlamoHttpQueries) -> PlamoResult {
-    unsafe {
-        match (*(*plamo_request).query).get(CStr::from_ptr(key)) {
-            Some(queries) => {
-                *plamo_http_queries = queries;
-                PlamoResult::Ok
-            },
-            None => PlamoResult::NotFound,
-        }
     }
 }
