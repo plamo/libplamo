@@ -1,22 +1,22 @@
-use plamo_http_headers::PlamoHttpHeaders;
+use plamo_http_header::{PlamoHttpHeader, plamo_http_header_new};
 use plamo_result::PlamoResult;
-use std::collections::BTreeMap;
-use std::ffi::{CStr, CString};
-use std::os::raw::{c_char, c_uchar, c_uint};
+use std::os::raw::{c_uchar, c_uint};
 use std::ptr;
 
 #[repr(C)]
 pub struct PlamoResponse {
     status_code: c_uint,
-    header: *mut BTreeMap<CString, PlamoHttpHeaders>,
+    header: *mut PlamoHttpHeader,
     body: *mut Vec<c_uchar>,
 }
 
 #[no_mangle]
 pub extern fn plamo_response_new(status_code: c_uint, plamo_response: &mut *mut PlamoResponse) -> PlamoResult {
+    let mut header = ptr::null_mut();
+    plamo_http_header_new(&mut header);
     *plamo_response = Box::into_raw(Box::new(PlamoResponse {
         status_code: status_code,
-        header: Box::into_raw(Box::new(BTreeMap::new())),
+        header: header,
         body: ptr::null_mut(),
     }));
     PlamoResult::Ok
@@ -45,17 +45,4 @@ pub extern fn plamo_response_set_body(plamo_response: *mut PlamoResponse, body: 
         (*plamo_response).body = Box::into_raw(Box::new(Vec::from_raw_parts(body, size, size)));
     }
     PlamoResult::Ok
-}
-
-#[no_mangle]
-pub extern fn plamo_response_find_headers(plamo_response: *mut PlamoResponse, key: *const c_char, plamo_http_headers: &mut *const PlamoHttpHeaders) -> PlamoResult {
-    unsafe {
-        match (*(*plamo_response).header).get(CStr::from_ptr(key)) {
-            Some(headers) => {
-                *plamo_http_headers = headers;
-                PlamoResult::Ok
-            },
-            None => PlamoResult::NotFound,
-        }
-    }
 }

@@ -8,6 +8,13 @@ pub struct PlamoStringArray {
 }
 
 #[no_mangle]
+pub extern fn plamo_string_array_new(plamo_string_array: &mut *mut PlamoStringArray) {
+    *plamo_string_array = Box::into_raw(Box::new(PlamoStringArray {
+        inner: Vec::new(),
+    }));
+}
+
+#[no_mangle]
 pub extern fn plamo_string_array_for_each(plamo_string_array: *const PlamoStringArray, callback: extern fn(*const c_char)) {
     unsafe {
         (*plamo_string_array).inner.iter().for_each(|header| callback(header.as_ptr()));
