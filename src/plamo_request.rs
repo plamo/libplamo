@@ -1,7 +1,6 @@
 use plamo_http_header::PlamoHttpHeader;
 use plamo_http_method::PlamoHttpMethod;
 use plamo_http_query::PlamoHttpQuery;
-use plamo_result::PlamoResult;
 use std::ffi::CString;
 use std::os::raw::{c_char, c_uchar};
 use std::ptr;
@@ -24,7 +23,7 @@ pub extern fn plamo_request_new(
     path: *mut c_char,
     version: *mut c_char,
     plamo_request: &mut *mut PlamoRequest
-) -> PlamoResult {
+) {
     *plamo_request = Box::into_raw(Box::new(PlamoRequest {
         method: method,
         scheme: unsafe { CString::from_raw(scheme) },
@@ -34,7 +33,6 @@ pub extern fn plamo_request_new(
         header: PlamoHttpHeader::new(),
         body: Vec::new(),
     }));
-    PlamoResult::Ok
 }
 
 #[no_mangle]
