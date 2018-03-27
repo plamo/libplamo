@@ -44,3 +44,33 @@ pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
         *plamo_request = ptr::null_mut();
     }
 }
+
+#[no_mangle]
+pub extern fn plamo_request_get_method(plamo_request: *const PlamoRequest) -> PlamoHttpMethod {
+    unsafe { (*plamo_request).method }
+}
+
+#[no_mangle]
+pub extern fn plamo_request_get_scheme(plamo_request: *const PlamoRequest) -> *const c_char {
+    unsafe { (*plamo_request).scheme.as_ptr() }
+}
+
+#[no_mangle]
+pub extern fn plamo_request_get_path(plamo_request: *const PlamoRequest) -> *const c_char {
+    unsafe { (*plamo_request).path.as_ptr() }
+}
+
+#[no_mangle]
+pub extern fn plamo_request_get_version(plamo_request: *const PlamoRequest) -> *const c_char {
+    unsafe { (*plamo_request).version.as_ptr() }
+}
+
+#[no_mangle]
+pub extern fn plamo_request_get_query(plamo_request: *mut PlamoRequest) -> *mut PlamoHttpQuery {
+    unsafe { &mut (*plamo_request).query }
+}
+
+#[no_mangle]
+pub extern fn plamo_request_get_header(plamo_request: *mut PlamoRequest) -> *mut PlamoHttpHeader {
+    unsafe { &mut (*plamo_request).header }
+}
