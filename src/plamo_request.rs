@@ -74,3 +74,10 @@ pub extern fn plamo_request_get_query(plamo_request: *mut PlamoRequest) -> *mut 
 pub extern fn plamo_request_get_header(plamo_request: *mut PlamoRequest) -> *mut PlamoHttpHeader {
     unsafe { &mut (*plamo_request).header }
 }
+
+#[no_mangle]
+pub extern fn plamo_request_set_body(plamo_request: *mut PlamoRequest, body: *mut c_uchar, size: usize) {
+    unsafe {
+        (*plamo_request).body = Vec::from_raw_parts(body, size, size);
+    }
+}
