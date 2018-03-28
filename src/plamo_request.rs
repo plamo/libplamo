@@ -1,3 +1,4 @@
+use plamo_byte_array::PlamoByteArray;
 use plamo_http_header::PlamoHttpHeader;
 use plamo_http_method::PlamoHttpMethod;
 use plamo_http_query::PlamoHttpQuery;
@@ -71,6 +72,11 @@ pub extern fn plamo_request_get_query(plamo_request: *mut PlamoRequest) -> *mut 
 #[no_mangle]
 pub extern fn plamo_request_get_header(plamo_request: *mut PlamoRequest) -> *mut PlamoHttpHeader {
     unsafe { &mut (*plamo_request).header }
+}
+
+#[no_mangle]
+pub extern fn plamo_request_get_body(plamo_request: *const PlamoRequest) -> PlamoByteArray {
+    unsafe { PlamoByteArray::new(&(*plamo_request).body) }
 }
 
 #[no_mangle]
