@@ -23,9 +23,8 @@ pub extern fn plamo_request_new(
     scheme: *mut c_char,
     path: *mut c_char,
     version: *mut c_char,
-    plamo_request: &mut *mut PlamoRequest
-) {
-    *plamo_request = Box::into_raw(Box::new(PlamoRequest {
+) -> *mut PlamoRequest {
+    Box::into_raw(Box::new(PlamoRequest {
         method: method,
         scheme: unsafe { CString::from_raw(scheme) },
         path: unsafe { CString::from_raw(path) },
@@ -33,7 +32,7 @@ pub extern fn plamo_request_new(
         query: PlamoHttpQuery::new(),
         header: PlamoHttpHeader::new(),
         body: Vec::new(),
-    }));
+    }))
 }
 
 #[no_mangle]

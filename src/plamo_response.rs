@@ -11,12 +11,12 @@ pub struct PlamoResponse {
 }
 
 #[no_mangle]
-pub extern fn plamo_response_new(status_code: c_uint, plamo_response: &mut *mut PlamoResponse) {
-    *plamo_response = Box::into_raw(Box::new(PlamoResponse {
+pub extern fn plamo_response_new(status_code: c_uint) -> *mut PlamoResponse {
+    Box::into_raw(Box::new(PlamoResponse {
         status_code: status_code,
         header: PlamoHttpHeader::new(),
         body: Vec::new(),
-    }));
+    }))
 }
 
 #[no_mangle]

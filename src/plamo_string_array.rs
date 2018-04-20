@@ -1,6 +1,6 @@
-use plamo_result::PlamoResult;
 use std::ffi::CString;
 use std::os::raw::c_char;
+use std::ptr;
 
 #[repr(C)]
 pub struct PlamoStringArray {
@@ -8,10 +8,10 @@ pub struct PlamoStringArray {
 }
 
 #[no_mangle]
-pub extern fn plamo_string_array_new(plamo_string_array: &mut *mut PlamoStringArray) {
-    *plamo_string_array = Box::into_raw(Box::new(PlamoStringArray {
+pub extern fn plamo_string_array_new() -> *mut PlamoStringArray {
+    Box::into_raw(Box::new(PlamoStringArray {
         inner: Vec::new(),
-    }));
+    }))
 }
 
 #[no_mangle]
@@ -22,40 +22,31 @@ pub extern fn plamo_string_array_for_each(plamo_string_array: *const PlamoString
 }
 
 #[no_mangle]
-pub extern fn plamo_string_array_get_at(plamo_string_array: *const PlamoStringArray, index: usize, value: *mut *const c_char) -> PlamoResult {
+pub extern fn plamo_string_array_get_at(plamo_string_array: *const PlamoStringArray, index: usize) -> *const c_char {
     unsafe {
         match (*plamo_string_array).inner.get(index) {
-            Some(v) => {
-                *value = v.as_ptr();
-                PlamoResult::Ok
-            },
-            None => PlamoResult::NotFound,
+            Some(v) => v.as_ptr(),
+            None => ptr::null(),
         }
     }
 }
 
 #[no_mangle]
-pub extern fn plamo_string_array_get_first(plamo_string_array: *const PlamoStringArray, value: *mut *const c_char) -> PlamoResult {
+pub extern fn plamo_string_array_get_first(plamo_string_array: *const PlamoStringArray) -> *const c_char {
     unsafe {
         match (*plamo_string_array).inner.first() {
-            Some(v) => {
-                *value = v.as_ptr();
-                PlamoResult::Ok
-            },
-            None => PlamoResult::NotFound,
+            Some(v) => v.as_ptr(),
+            None => ptr::null(),
         }
     }
 }
 
 #[no_mangle]
-pub extern fn plamo_string_array_get_last(plamo_string_array: *const PlamoStringArray, value: *mut *const c_char) -> PlamoResult {
+pub extern fn plamo_string_array_get_last(plamo_string_array: *const PlamoStringArray) -> *const c_char {
     unsafe {
         match (*plamo_string_array).inner.last() {
-            Some(v) => {
-                *value = v.as_ptr();
-                PlamoResult::Ok
-            },
-            None => PlamoResult::NotFound,
+            Some(v) => v.as_ptr(),
+            None => ptr::null(),
         }
     }
 }
@@ -68,14 +59,8 @@ pub extern fn plamo_string_array_add(plamo_string_array: *mut PlamoStringArray, 
 }
 
 #[no_mangle]
-pub extern fn plamo_string_array_remove_at(plamo_string_array: *mut PlamoStringArray, index: usize) -> PlamoResult {
+pub extern fn plamo_string_array_remove_at(plamo_string_array: *mut PlamoStringArray, index: usize) -> bool {
     unsafe {
-        match (*plamo_string_array).inner.get(index) {
-            Some(_) => {
-                (*plamo_string_array).inner.remove(index);
-                PlamoResult::Ok
-            },
-            None => PlamoResult::NotFound,
-        }
+        (*plamo_string_array).inner.get(index).map(|_| (*plamo_string_array).inner.remove(index)).is_some()
     }
 }
