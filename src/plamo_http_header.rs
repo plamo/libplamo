@@ -26,6 +26,18 @@ pub extern fn plamo_http_header_get(plamo_http_header: *const PlamoHttpHeader, k
 }
 
 #[no_mangle]
+pub extern fn plamo_http_header_add(plamo_http_header: *mut PlamoHttpHeader, key: *const c_char, value: *const c_char) {
+    unsafe {
+        match (*plamo_http_header).inner.get_mut(CStr::from_ptr(key)) {
+            Some(plamo_string_array) => plamo_string_array.inner.push(CString::from_raw(value as *mut _)),
+            None => {
+                (*plamo_http_header).inner.insert(CString::from_raw(key as *mut _), PlamoStringArray { inner: vec![CString::from_raw(value as *mut _)]} );
+            },
+        }
+    }
+}
+
+#[no_mangle]
 pub extern fn plamo_http_header_remove(plamo_http_header: *mut PlamoHttpHeader, key: *const c_char) -> bool {
     unsafe {
         (*plamo_http_header).inner.remove(CStr::from_ptr(key)).is_some()
