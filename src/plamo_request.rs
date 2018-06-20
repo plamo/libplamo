@@ -20,15 +20,15 @@ pub struct PlamoRequest {
 #[no_mangle]
 pub extern fn plamo_request_new(
     method: PlamoHttpMethod,
-    scheme: *mut c_char,
-    path: *mut c_char,
-    version: *mut c_char,
+    scheme: *const c_char,
+    path: *const c_char,
+    version: *const c_char,
 ) -> *mut PlamoRequest {
     Box::into_raw(Box::new(PlamoRequest {
         method: method,
-        scheme: unsafe { CString::from_raw(scheme) },
-        path: unsafe { CString::from_raw(path) },
-        version: unsafe { CString::from_raw(version) },
+        scheme: unsafe { CString::from_raw(scheme as *mut _) },
+        path: unsafe { CString::from_raw(path as *mut _) },
+        version: unsafe { CString::from_raw(version as *mut _) },
         query: PlamoHttpQuery::new(),
         header: PlamoHttpHeader::new(),
         body: Vec::new(),

@@ -4,7 +4,7 @@ use std::ptr;
 
 #[repr(C)]
 pub struct PlamoStringArray {
-    inner: Vec<CString>,
+    pub(crate) inner: Vec<CString>,
 }
 
 #[no_mangle]
@@ -52,9 +52,9 @@ pub extern fn plamo_string_array_get_last(plamo_string_array: *const PlamoString
 }
 
 #[no_mangle]
-pub extern fn plamo_string_array_add(plamo_string_array: *mut PlamoStringArray, value: *mut c_char) {
+pub extern fn plamo_string_array_add(plamo_string_array: *mut PlamoStringArray, value: *const c_char) {
     unsafe {
-        (*plamo_string_array).inner.push(CString::from_raw(value));
+        (*plamo_string_array).inner.push(CString::from_raw(value as *mut _));
     }
 }
 
