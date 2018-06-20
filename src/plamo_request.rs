@@ -12,7 +12,7 @@ pub struct PlamoRequest {
     scheme: CString,
     path: CString,
     version: CString,
-    query: PlamoHttpQuery,
+    query: *const PlamoHttpQuery,
     header: PlamoHttpHeader,
     body: Vec<c_uchar>,
 }
@@ -23,13 +23,14 @@ pub extern fn plamo_request_new(
     scheme: *const c_char,
     path: *const c_char,
     version: *const c_char,
+    query: *const PlamoHttpQuery,
 ) -> *mut PlamoRequest {
     Box::into_raw(Box::new(PlamoRequest {
         method: method,
         scheme: unsafe { CString::from_raw(scheme as *mut _) },
         path: unsafe { CString::from_raw(path as *mut _) },
         version: unsafe { CString::from_raw(version as *mut _) },
-        query: PlamoHttpQuery::new(),
+        query: query,
         header: PlamoHttpHeader::new(),
         body: Vec::new(),
     }))
@@ -38,7 +39,10 @@ pub extern fn plamo_request_new(
 #[no_mangle]
 pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
     if !plamo_request.is_null() {
-        unsafe { Box::from_raw(*plamo_request); }
+        unsafe {
+            Box::from_raw((**plamo_request).query as *mut PlamoHttpQuery);
+            Box::from_raw(*plamo_request);
+        }
         *plamo_request = ptr::null_mut();
     }
 }
@@ -61,11 +65,6 @@ pub extern fn plamo_request_get_path(plamo_request: *const PlamoRequest) -> *con
 #[no_mangle]
 pub extern fn plamo_request_get_version(plamo_request: *const PlamoRequest) -> *const c_char {
     unsafe { (*plamo_request).version.as_ptr() }
-}
-
-#[no_mangle]
-pub extern fn plamo_request_get_query(plamo_request: *mut PlamoRequest) -> *mut PlamoHttpQuery {
-    unsafe { &mut (*plamo_request).query }
 }
 
 #[no_mangle]
