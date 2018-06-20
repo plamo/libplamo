@@ -14,3 +14,11 @@ impl PlamoByteArray {
         }
     }
 }
+
+#[no_mangle]
+pub extern fn plamo_byte_array_new(body: *const c_uchar, length: usize) -> *mut PlamoByteArray {
+    Box::into_raw(Box::new(PlamoByteArray {
+        body: body,
+        length: length,
+    }))
+}

@@ -3,7 +3,7 @@ use plamo_http_header::PlamoHttpHeader;
 use plamo_http_method::PlamoHttpMethod;
 use plamo_http_query::PlamoHttpQuery;
 use std::ffi::CString;
-use std::os::raw::{c_char, c_uchar};
+use std::os::raw::c_char;
 use std::ptr;
 
 #[repr(C)]
@@ -14,7 +14,7 @@ pub struct PlamoRequest {
     version: CString,
     query: *const PlamoHttpQuery,
     header: *const PlamoHttpHeader,
-    body: Vec<c_uchar>,
+    body: *const PlamoByteArray,
 }
 
 #[no_mangle]
@@ -25,6 +25,7 @@ pub extern fn plamo_request_new(
     version: *const c_char,
     query: *const PlamoHttpQuery,
     header: *const PlamoHttpHeader,
+    body: *const PlamoByteArray,
 ) -> *mut PlamoRequest {
     Box::into_raw(Box::new(PlamoRequest {
         method: method,
@@ -33,7 +34,7 @@ pub extern fn plamo_request_new(
         version: unsafe { CString::from_raw(version as *mut _) },
         query: query,
         header: header,
-        body: Vec::new(),
+        body: body,
     }))
 }
 
@@ -45,6 +46,8 @@ pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
             (**plamo_request).query = ptr::null();
             Box::from_raw((**plamo_request).header as *mut PlamoHttpHeader);
             (**plamo_request).header = ptr::null();
+            Box::from_raw((**plamo_request).body as *mut PlamoByteArray);
+            (**plamo_request).body = ptr::null();
             Box::from_raw(*plamo_request);
         }
         *plamo_request = ptr::null_mut();
@@ -69,16 +72,4 @@ pub extern fn plamo_request_get_path(plamo_request: *const PlamoRequest) -> *con
 #[no_mangle]
 pub extern fn plamo_request_get_version(plamo_request: *const PlamoRequest) -> *const c_char {
     unsafe { (*plamo_request).version.as_ptr() }
-}
-
-#[no_mangle]
-pub extern fn plamo_request_get_body(plamo_request: *const PlamoRequest) -> PlamoByteArray {
-    unsafe { PlamoByteArray::new(&(*plamo_request).body) }
-}
-
-#[no_mangle]
-pub extern fn plamo_request_set_body(plamo_request: *mut PlamoRequest, body: *mut c_uchar, size: usize) {
-    unsafe {
-        (*plamo_request).body = Vec::from_raw_parts(body, size, size);
-    }
 }
