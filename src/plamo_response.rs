@@ -1,21 +1,21 @@
 use plamo_byte_array::PlamoByteArray;
 use plamo_http_header::PlamoHttpHeader;
-use std::os::raw::{c_uchar, c_uint};
+use std::os::raw::c_uint;
 use std::ptr;
 
 #[repr(C)]
 pub struct PlamoResponse {
     status_code: c_uint,
     header: PlamoHttpHeader,
-    body: Vec<c_uchar>,
+    body: *const PlamoByteArray,
 }
 
 #[no_mangle]
-pub extern fn plamo_response_new(status_code: c_uint) -> *mut PlamoResponse {
+pub extern fn plamo_response_new(status_code: c_uint, body: *const PlamoByteArray) -> *mut PlamoResponse {
     Box::into_raw(Box::new(PlamoResponse {
         status_code: status_code,
         header: PlamoHttpHeader::new(),
-        body: Vec::new(),
+        body: body,
     }))
 }
 
@@ -35,14 +35,4 @@ pub extern fn plamo_response_get_status_code(plamo_response: *const PlamoRespons
 #[no_mangle]
 pub extern fn plamo_response_get_header(plamo_response: *mut PlamoResponse) -> *mut PlamoHttpHeader {
     unsafe { &mut (*plamo_response).header }
-}
-
-#[no_mangle]
-pub extern fn plamo_response_get_body(plamo_response: *const PlamoResponse) -> PlamoByteArray {
-    unsafe { PlamoByteArray::new(&(*plamo_response).body) }
-}
-
-#[no_mangle]
-pub extern fn plamo_response_set_body(plamo_response: *mut PlamoResponse, body: *mut c_uchar, size: usize) {
-    unsafe { (*plamo_response).body = Vec::from_raw_parts(body, size, size); }
 }
