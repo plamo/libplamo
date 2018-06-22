@@ -2,23 +2,22 @@ use std::os::raw::c_uchar;
 
 #[repr(C)]
 pub struct PlamoByteArray {
-    body: *const c_uchar,
-    length: usize,
-}
-
-impl PlamoByteArray {
-    pub fn new(vec: &Vec<c_uchar>) -> PlamoByteArray {
-        PlamoByteArray {
-            body: vec.as_ptr(),
-            length: vec.len(),
-        }
-    }
+    body: Vec<c_uchar>,
 }
 
 #[no_mangle]
 pub extern fn plamo_byte_array_new(body: *const c_uchar, length: usize) -> *mut PlamoByteArray {
     Box::into_raw(Box::new(PlamoByteArray {
-        body: body,
-        length: length,
+        body: unsafe { Vec::from_raw_parts(body as *mut _, length, length) },
     }))
+}
+
+#[no_mangle]
+pub extern fn plamo_byte_array_get_body(plamo_byte_array: *const PlamoByteArray) -> *const c_uchar {
+    unsafe { (*plamo_byte_array).body.as_ptr() }
+}
+
+#[no_mangle]
+pub extern fn plamo_byte_array_get_body_size(plamo_byte_array: *const PlamoByteArray) -> usize {
+    unsafe { (*plamo_byte_array).body.len() }
 }
