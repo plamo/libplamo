@@ -3,7 +3,7 @@ use plamo_http_header::PlamoHttpHeader;
 use plamo_http_method::PlamoHttpMethod;
 use plamo_http_query::PlamoHttpQuery;
 use plamo_scheme::PlamoScheme;
-use std::ffi::CString;
+use plamo_string::{PlamoString, plamo_string_new};
 use std::os::raw::c_char;
 use std::ptr;
 
@@ -11,8 +11,8 @@ use std::ptr;
 pub struct PlamoRequest {
     method: PlamoHttpMethod,
     scheme: PlamoScheme,
-    path: CString,
-    version: CString,
+    path: *const PlamoString,
+    version: *const PlamoString,
     query: *const PlamoHttpQuery,
     header: *const PlamoHttpHeader,
     body: *const PlamoByteArray,
@@ -31,8 +31,8 @@ pub extern fn plamo_request_new(
     Box::into_raw(Box::new(PlamoRequest {
         method: method,
         scheme: scheme,
-        path: unsafe { CString::from_raw(path as *mut _) },
-        version: unsafe { CString::from_raw(version as *mut _) },
+        path: plamo_string_new(path),
+        version: plamo_string_new(version),
         query: query,
         header: header,
         body: body,
@@ -43,6 +43,10 @@ pub extern fn plamo_request_new(
 pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
     if !plamo_request.is_null() {
         unsafe {
+            Box::from_raw((**plamo_request).path as *mut PlamoString);
+            (**plamo_request).path = ptr::null();
+            Box::from_raw((**plamo_request).version as *mut PlamoString);
+            (**plamo_request).version = ptr::null();
             Box::from_raw((**plamo_request).query as *mut PlamoHttpQuery);
             (**plamo_request).query = ptr::null();
             Box::from_raw((**plamo_request).header as *mut PlamoHttpHeader);
@@ -53,19 +57,4 @@ pub extern fn plamo_request_destroy(plamo_request: &mut *mut PlamoRequest) {
         }
         *plamo_request = ptr::null_mut();
     }
-}
-
-#[no_mangle]
-pub extern fn plamo_request_get_method(plamo_request: *const PlamoRequest) -> PlamoHttpMethod {
-    unsafe { (*plamo_request).method }
-}
-
-#[no_mangle]
-pub extern fn plamo_request_get_path(plamo_request: *const PlamoRequest) -> *const c_char {
-    unsafe { (*plamo_request).path.as_ptr() }
-}
-
-#[no_mangle]
-pub extern fn plamo_request_get_version(plamo_request: *const PlamoRequest) -> *const c_char {
-    unsafe { (*plamo_request).version.as_ptr() }
 }

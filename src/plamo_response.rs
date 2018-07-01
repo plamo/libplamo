@@ -22,7 +22,13 @@ pub extern fn plamo_response_new(status_code: c_uint, header: *const PlamoHttpHe
 #[no_mangle]
 pub extern fn plamo_response_destroy(plamo_response: &mut *mut PlamoResponse) {
     if !plamo_response.is_null() {
-        unsafe { Box::from_raw(*plamo_response); }
+        unsafe {
+            Box::from_raw((**plamo_response).header as *mut PlamoHttpHeader);
+            (**plamo_response).header = ptr::null();
+            Box::from_raw((**plamo_response).body as *mut PlamoByteArray);
+            (**plamo_response).body = ptr::null();
+            Box::from_raw(*plamo_response);
+        }
         *plamo_response = ptr::null_mut();
     }
 }
