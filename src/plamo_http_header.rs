@@ -9,9 +9,20 @@ pub struct PlamoHttpHeader {
     inner: BTreeMap<CString, PlamoStringArray>,
 }
 
-impl PlamoHttpHeader {
-    pub fn new() -> PlamoHttpHeader {
-        PlamoHttpHeader { inner: BTreeMap::new() }
+#[no_mangle]
+pub extern fn plamo_http_header_new() -> *mut PlamoHttpHeader {
+    Box::into_raw(Box::new(PlamoHttpHeader {
+       inner: BTreeMap::new(),
+    }))
+}
+
+#[no_mangle]
+pub extern fn plamo_http_header_destroy(plamo_http_header: &mut *mut PlamoHttpHeader) {
+    if !plamo_http_header.is_null() {
+        unsafe {
+           Box::from_raw(*plamo_http_header);
+        }
+        *plamo_http_header = ptr::null_mut();
     }
 }
 

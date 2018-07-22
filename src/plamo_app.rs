@@ -1,4 +1,6 @@
 use plamo_middleware::PlamoMiddleware;
+use plamo_request::PlamoRequest;
+use plamo_response::{PlamoResponse, plamo_response_new};
 use std::ptr;
 
 #[repr(C)]
@@ -21,4 +23,19 @@ pub extern fn plamo_app_destroy(plamo_app: &mut *mut PlamoApp) {
         }
         *plamo_app = ptr::null_mut();
     }
+}
+
+#[no_mangle]
+pub extern fn plamo_app_execute(plamo_app: *const PlamoApp, plamo_request: *const PlamoRequest) -> *mut PlamoResponse {
+    let plamo_response = plamo_response_new();
+
+    unsafe {
+        for middleware in &(*plamo_app).middlewares {
+            if !(*middleware.callback)(middleware.body, plamo_request, plamo_response) {
+                break;
+            }
+        }
+    }
+
+    plamo_response
 }
