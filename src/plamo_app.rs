@@ -5,7 +5,7 @@ use std::ptr;
 
 #[repr(C)]
 pub struct PlamoApp {
-    middlewares: Vec<PlamoMiddleware>,
+    middlewares: Vec<*const PlamoMiddleware>,
 }
 
 #[no_mangle]
@@ -26,12 +26,19 @@ pub extern fn plamo_app_destroy(plamo_app: &mut *mut PlamoApp) {
 }
 
 #[no_mangle]
+pub extern fn plamo_app_add_middleware(plamo_app: *mut PlamoApp, plamo_middleware: *const PlamoMiddleware) {
+    unsafe {
+        (*plamo_app).middlewares.push(plamo_middleware);
+    }
+}
+
+#[no_mangle]
 pub extern fn plamo_app_execute(plamo_app: *const PlamoApp, plamo_request: *const PlamoRequest) -> *mut PlamoResponse {
     let plamo_response = plamo_response_new();
 
     unsafe {
         for middleware in &(*plamo_app).middlewares {
-            if !(*middleware.callback)(middleware.body, plamo_request, plamo_response) {
+            if !(*(**middleware).callback)((**middleware).body, plamo_request, plamo_response) {
                 break;
             }
         }
