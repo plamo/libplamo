@@ -4,16 +4,11 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::ptr;
 
-#[repr(C)]
-pub struct PlamoHttpHeader {
-    inner: BTreeMap<CString, PlamoStringArray>,
-}
+pub type PlamoHttpHeader = BTreeMap<CString, PlamoStringArray>;
 
 #[no_mangle]
 pub extern fn plamo_http_header_new() -> *mut PlamoHttpHeader {
-    Box::into_raw(Box::new(PlamoHttpHeader {
-       inner: BTreeMap::new(),
-    }))
+    Box::into_raw(Box::new(BTreeMap::new()))
 }
 
 #[no_mangle]
@@ -29,7 +24,7 @@ pub extern fn plamo_http_header_destroy(plamo_http_header: &mut *mut PlamoHttpHe
 #[no_mangle]
 pub extern fn plamo_http_header_get(plamo_http_header: *const PlamoHttpHeader, key: *const c_char) -> *const PlamoStringArray {
     unsafe {
-        match (*plamo_http_header).inner.get(CStr::from_ptr(key)) {
+        match (*plamo_http_header).get(CStr::from_ptr(key)) {
             Some(values) => values,
             None => ptr::null(),
         }
@@ -39,10 +34,10 @@ pub extern fn plamo_http_header_get(plamo_http_header: *const PlamoHttpHeader, k
 #[no_mangle]
 pub extern fn plamo_http_header_add(plamo_http_header: *mut PlamoHttpHeader, key: *const c_char, value: *const c_char) {
     unsafe {
-        match (*plamo_http_header).inner.get_mut(CStr::from_ptr(key)) {
-            Some(plamo_string_array) => plamo_string_array.inner.push(CString::from_raw(value as *mut _)),
+        match (*plamo_http_header).get_mut(CStr::from_ptr(key)) {
+            Some(plamo_string_array) => plamo_string_array.push(CString::from_raw(value as *mut _)),
             None => {
-                (*plamo_http_header).inner.insert(CString::from_raw(key as *mut _), PlamoStringArray { inner: vec![CString::from_raw(value as *mut _)]} );
+                (*plamo_http_header).insert(CString::from_raw(key as *mut _), vec![CString::from_raw(value as *mut _)] );
             },
         }
     }
@@ -51,6 +46,6 @@ pub extern fn plamo_http_header_add(plamo_http_header: *mut PlamoHttpHeader, key
 #[no_mangle]
 pub extern fn plamo_http_header_remove(plamo_http_header: *mut PlamoHttpHeader, key: *const c_char) -> bool {
     unsafe {
-        (*plamo_http_header).inner.remove(CStr::from_ptr(key)).is_some()
+        (*plamo_http_header).remove(CStr::from_ptr(key)).is_some()
     }
 }

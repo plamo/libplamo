@@ -1,5 +1,4 @@
 #[repr(C)]
-#[derive(Copy, Clone)]
 pub enum PlamoHttpMethod {
     Get,
     Head,

@@ -5,8 +5,8 @@ use std::ptr;
 
 #[repr(C)]
 pub struct PlamoMiddleware {
-    pub(crate) body: *const c_void,
-    pub(crate) callback: *const extern fn(*const c_void, *const PlamoRequest, *mut PlamoResponse) -> bool,
+    pub body: *const c_void,
+    pub callback: *const extern fn(*const c_void, *const PlamoRequest, *mut PlamoResponse) -> bool,
 }
 
 #[no_mangle]

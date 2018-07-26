@@ -2,22 +2,17 @@ use std::ffi::CString;
 use std::os::raw::c_char;
 use std::ptr;
 
-#[repr(C)]
-pub struct PlamoString {
-    inner: CString,
-}
+pub type PlamoString = CString;
 
 #[no_mangle]
 pub extern fn plamo_string_new(value: *const c_char) -> *const PlamoString {
-    Box::into_raw(Box::new(PlamoString {
-        inner: unsafe { CString::from_raw(value as *mut c_char) },
-    }))
+    unsafe { Box::into_raw(Box::new(CString::from_raw(value as *mut c_char))) }
 }
 
 #[no_mangle]
 pub extern fn plamo_string_get_char(plamo_string: *const PlamoString) -> *const c_char {
     unsafe {
-        (*plamo_string).inner.as_ptr()
+        (*plamo_string).as_ptr()
     }
 }
 
