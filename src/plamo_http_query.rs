@@ -9,9 +9,20 @@ pub struct PlamoHttpQuery {
     inner: BTreeMap<CString, PlamoStringArray>,
 }
 
-impl PlamoHttpQuery {
-    pub fn new() -> PlamoHttpQuery {
-        PlamoHttpQuery { inner: BTreeMap::new() }
+#[no_mangle]
+pub extern fn plamo_http_query_new() -> *mut PlamoHttpQuery {
+    Box::into_raw(Box::new(PlamoHttpQuery {
+       inner: BTreeMap::new(),
+    }))
+}
+
+#[no_mangle]
+pub extern fn plamo_http_query_destroy(plamo_http_query: &mut *mut PlamoHttpQuery) {
+    if !plamo_http_query.is_null() {
+        unsafe {
+           Box::from_raw(*plamo_http_query);
+        }
+        *plamo_http_query = ptr::null_mut();
     }
 }
 
