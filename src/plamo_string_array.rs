@@ -6,7 +6,7 @@ pub type PlamoStringArray = Vec<CString>;
 
 #[no_mangle]
 pub extern fn plamo_string_array_new() -> *mut PlamoStringArray {
-    Box::into_raw(Box::new(Vec::new()))
+    Box::into_raw(Box::new(PlamoStringArray::new()))
 }
 
 #[no_mangle]

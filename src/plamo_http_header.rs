@@ -8,7 +8,7 @@ pub type PlamoHttpHeader = BTreeMap<CString, PlamoStringArray>;
 
 #[no_mangle]
 pub extern fn plamo_http_header_new() -> *mut PlamoHttpHeader {
-    Box::into_raw(Box::new(BTreeMap::new()))
+    Box::into_raw(Box::new(PlamoHttpHeader::new()))
 }
 
 #[no_mangle]

@@ -4,7 +4,7 @@ pub type PlamoByteArray = Vec<c_uchar>;
 
 #[no_mangle]
 pub extern fn plamo_byte_array_new(body: *const c_uchar, length: usize) -> *mut PlamoByteArray {
-    unsafe { Box::into_raw(Box::new(Vec::from_raw_parts(body as *mut _, length, length))) }
+    unsafe { Box::into_raw(Box::new(PlamoByteArray::from_raw_parts(body as *mut _, length, length))) }
 }
 
 #[no_mangle]

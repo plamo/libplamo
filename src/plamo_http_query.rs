@@ -8,7 +8,7 @@ pub type PlamoHttpQuery = BTreeMap<CString, PlamoStringArray>;
 
 #[no_mangle]
 pub extern fn plamo_http_query_new() -> *mut PlamoHttpQuery {
-    Box::into_raw(Box::new(BTreeMap::new()))
+    Box::into_raw(Box::new(PlamoHttpQuery::new()))
 }
 
 #[no_mangle]
