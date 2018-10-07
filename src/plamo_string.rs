@@ -1,12 +1,13 @@
 use std::ffi::CString;
 use std::os::raw::c_char;
-use std::ptr;
 
 pub type PlamoString = CString;
 
 #[no_mangle]
 pub extern fn plamo_string_new(value: *const c_char) -> *const PlamoString {
-    unsafe { Box::into_raw(Box::new(CString::from_raw(value as *mut c_char))) }
+    unsafe {
+        Box::into_raw(Box::new(CString::from_raw(value as *mut c_char)))
+    }
 }
 
 #[no_mangle]
@@ -17,9 +18,8 @@ pub extern fn plamo_string_get_char(plamo_string: *const PlamoString) -> *const 
 }
 
 #[no_mangle]
-pub extern fn plamo_string_destroy(plamo_string: &mut *mut PlamoString) {
-    if !plamo_string.is_null() {
-        unsafe { Box::from_raw(*plamo_string); }
-        *plamo_string = ptr::null_mut();
+pub extern fn plamo_string_destroy(plamo_string: *mut PlamoString) {
+    unsafe {
+        drop(Box::from_raw(plamo_string));
     }
 }

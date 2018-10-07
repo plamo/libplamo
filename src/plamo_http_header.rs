@@ -12,12 +12,9 @@ pub extern fn plamo_http_header_new() -> *mut PlamoHttpHeader {
 }
 
 #[no_mangle]
-pub extern fn plamo_http_header_destroy(plamo_http_header: &mut *mut PlamoHttpHeader) {
-    if !plamo_http_header.is_null() {
-        unsafe {
-           Box::from_raw(*plamo_http_header);
-        }
-        *plamo_http_header = ptr::null_mut();
+pub extern fn plamo_http_header_destroy(plamo_http_header: *mut PlamoHttpHeader) {
+    unsafe {
+       drop(Box::from_raw(plamo_http_header));
     }
 }
 

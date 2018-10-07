@@ -10,6 +10,13 @@ pub extern fn plamo_string_array_new() -> *mut PlamoStringArray {
 }
 
 #[no_mangle]
+pub extern fn plamo_string_array_destroy(plamo_string_array: *mut PlamoStringArray) {
+    unsafe {
+        drop(Box::from_raw(plamo_string_array));
+    }
+}
+
+#[no_mangle]
 pub extern fn plamo_string_array_for_each(plamo_string_array: *const PlamoStringArray, callback: extern fn(*const c_char)) {
     unsafe {
         (*plamo_string_array).iter().for_each(|header| callback(header.as_ptr()));

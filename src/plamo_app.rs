@@ -1,7 +1,6 @@
 use plamo_middleware::PlamoMiddleware;
 use plamo_request::PlamoRequest;
 use plamo_response::{PlamoResponse, plamo_response_new};
-use std::ptr;
 
 #[repr(C)]
 pub struct PlamoApp {
@@ -16,12 +15,9 @@ pub extern fn plamo_app_new() -> *mut PlamoApp {
 }
 
 #[no_mangle]
-pub extern fn plamo_app_destroy(plamo_app: &mut *mut PlamoApp) {
-    if !plamo_app.is_null() {
-        unsafe {
-           Box::from_raw(*plamo_app);
-        }
-        *plamo_app = ptr::null_mut();
+pub extern fn plamo_app_destroy(plamo_app: *mut PlamoApp) {
+    unsafe {
+        drop(Box::from_raw(plamo_app));
     }
 }
 

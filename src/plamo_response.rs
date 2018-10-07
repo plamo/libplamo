@@ -20,19 +20,10 @@ pub extern fn plamo_response_new() -> *mut PlamoResponse {
 }
 
 #[no_mangle]
-pub extern fn plamo_response_destroy(plamo_response: &mut *mut PlamoResponse) {
-    if !plamo_response.is_null() {
-        unsafe {
-            if !(**plamo_response).header.is_null() {
-                Box::from_raw((**plamo_response).header as *mut PlamoHttpHeader);
-                (**plamo_response).header = ptr::null();
-            }
-            if !(**plamo_response).body.is_null() {
-                Box::from_raw((**plamo_response).body as *mut PlamoByteArray);
-                (**plamo_response).body = ptr::null();
-            }
-            Box::from_raw(*plamo_response);
-        }
-        *plamo_response = ptr::null_mut();
+pub extern fn plamo_response_destroy(plamo_response: *mut PlamoResponse) {
+    unsafe {
+        drop(Box::from_raw((*plamo_response).header as *mut PlamoHttpHeader));
+        drop(Box::from_raw((*plamo_response).body as *mut PlamoByteArray));
+        drop(Box::from_raw(plamo_response));
     }
 }

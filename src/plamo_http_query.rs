@@ -12,12 +12,9 @@ pub extern fn plamo_http_query_new() -> *mut PlamoHttpQuery {
 }
 
 #[no_mangle]
-pub extern fn plamo_http_query_destroy(plamo_http_query: &mut *mut PlamoHttpQuery) {
-    if !plamo_http_query.is_null() {
-        unsafe {
-           Box::from_raw(*plamo_http_query);
-        }
-        *plamo_http_query = ptr::null_mut();
+pub extern fn plamo_http_query_destroy(plamo_http_query: *mut PlamoHttpQuery) {
+    unsafe {
+       drop(Box::from_raw(plamo_http_query));
     }
 }
 

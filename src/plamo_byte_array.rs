@@ -8,6 +8,13 @@ pub extern fn plamo_byte_array_new(body: *const c_uchar, length: usize) -> *mut 
 }
 
 #[no_mangle]
+pub extern fn plamo_byte_array_destroy(plamo_byte_array: *mut PlamoByteArray) {
+    unsafe {
+        drop(Box::from_raw(plamo_byte_array));
+    }
+}
+
+#[no_mangle]
 pub extern fn plamo_byte_array_get_body(plamo_byte_array: *const PlamoByteArray) -> *const c_uchar {
     unsafe { (*plamo_byte_array).as_ptr() }
 }
