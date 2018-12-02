@@ -34,7 +34,7 @@ pub extern fn plamo_app_execute(plamo_app: *const PlamoApp, plamo_request: *cons
 
     unsafe {
         for middleware in &(*plamo_app).middlewares {
-            if !(*(**middleware).callback)((**middleware).body, plamo_request, plamo_response) {
+            if !((**middleware).callback)((**middleware).body, plamo_request, plamo_response) {
                 break;
             }
         }

@@ -82,7 +82,7 @@ typedef struct PlamoMiddleware {
   const void *body;
   bool (**callback)(const void*, const PlamoRequest*, PlamoResponse*);
 } PlamoMiddleware;
-PlamoMiddleware* plamo_middleware_new(const void *body, bool (**callback)(const void*, const PlamoRequest*, PlamoResponse*));
+PlamoMiddleware* plamo_middleware_new(const void *body, bool (*callback)(const void*, const PlamoRequest*, PlamoResponse*));
 void plamo_middleware_destroy(PlamoMiddleware *plamo_middleware);
 
 typedef struct PlamoApp PlamoApp;
