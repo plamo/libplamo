@@ -1,7 +1,6 @@
 pub mod plamo_app;
 pub mod plamo_byte_array;
 pub mod plamo_http_header;
-pub mod plamo_http_method;
 pub mod plamo_http_query;
 pub mod plamo_middleware;
 pub mod plamo_request;

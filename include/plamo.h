@@ -12,17 +12,6 @@ typedef enum PlamoScheme {
   Https,
 } PlamoScheme;
 
-typedef enum PlamoHttpMethod {
-  Get,
-  Head,
-  Post,
-  Put,
-  Delete,
-  Connect,
-  Options,
-  Trace,
-} PlamoHttpMethod;
-
 typedef struct PlamoString PlamoString;
 PlamoString* plamo_string_new(const char *value);
 void plamo_string_destroy(PlamoString plamo_string);
@@ -59,7 +48,7 @@ void plamo_http_query_add(PlamoHttpQuery *plamo_http_query, const char *key, con
 bool plamo_http_query_remove(PlamoHttpQuery *plamo_http_query, const char *key);
 
 typedef struct PlamoRequest {
-  PlamoHttpMethod method;
+  const PlamoString *method;
   PlamoScheme scheme;
   const PlamoString *path;
   const PlamoString *version;
@@ -67,7 +56,7 @@ typedef struct PlamoRequest {
   const PlamoHttpHeader *header;
   const PlamoByteArray *body;
 } PlamoRequest;
-PlamoRequest* plamo_request_new(PlamoHttpMethod method, PlamoScheme scheme, const char *path, const char *version, const PlamoByteArray *body);
+PlamoRequest* plamo_request_new(const char *method, PlamoScheme scheme, const char *path, const char *version, const PlamoByteArray *body);
 void plamo_request_destroy(PlamoRequest *plamo_request);
 
 typedef struct PlamoResponse {
