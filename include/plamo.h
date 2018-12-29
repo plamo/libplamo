@@ -12,6 +12,13 @@ extern "C" {
     Https,
   } PlamoScheme;
 
+  typedef enum PlamoHttpVersion {
+    Http09,
+    Http10,
+    Http11,
+    Http20,
+  } PlamoHttpVersion;
+
   typedef struct PlamoString PlamoString;
   PlamoString* plamo_string_new(const char *value);
   void plamo_string_destroy(PlamoString plamo_string);
@@ -51,12 +58,12 @@ extern "C" {
     const PlamoString *method;
     PlamoScheme scheme;
     const PlamoString *path;
-    const PlamoString *version;
+    PlamoHttpVersion version;
     const PlamoHttpQuery *query;
     const PlamoHttpHeader *header;
     const PlamoByteArray *body;
   } PlamoRequest;
-  PlamoRequest* plamo_request_new(const char *method, PlamoScheme scheme, const char *path, const char *version, const PlamoByteArray *body);
+  PlamoRequest* plamo_request_new(const char *method, PlamoScheme scheme, const char *path, PlamoHttpVersion version, const PlamoByteArray *body);
   void plamo_request_destroy(PlamoRequest *plamo_request);
 
   typedef struct PlamoResponse {
