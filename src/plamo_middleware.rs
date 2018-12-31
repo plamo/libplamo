@@ -1,5 +1,5 @@
-use plamo_request::PlamoRequest;
-use plamo_response::PlamoResponse;
+use crate::plamo_request::PlamoRequest;
+use crate::plamo_response::PlamoResponse;
 use std::os::raw::c_void;
 
 #[repr(C)]

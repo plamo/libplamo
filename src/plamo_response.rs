@@ -1,5 +1,5 @@
-use plamo_byte_array::PlamoByteArray;
-use plamo_http_header::{PlamoHttpHeader, plamo_http_header_new};
+use crate::plamo_byte_array::PlamoByteArray;
+use crate::plamo_http_header::{PlamoHttpHeader, plamo_http_header_new};
 use std::os::raw::c_uint;
 use std::ptr;
 

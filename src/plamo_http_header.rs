@@ -1,4 +1,4 @@
-use plamo_string_array::PlamoStringArray;
+use crate::plamo_string_array::PlamoStringArray;
 use std::collections::BTreeMap;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;

@@ -1,9 +1,9 @@
-use plamo_byte_array::PlamoByteArray;
-use plamo_http_header::{PlamoHttpHeader, plamo_http_header_new};
-use plamo_http_query::PlamoHttpQuery;
-use plamo_http_version::PlamoHttpVersion;
-use plamo_scheme::PlamoScheme;
-use plamo_string::{PlamoString, plamo_string_new};
+use crate::plamo_byte_array::PlamoByteArray;
+use crate::plamo_http_header::{PlamoHttpHeader, plamo_http_header_new};
+use crate::plamo_http_query::PlamoHttpQuery;
+use crate::plamo_http_version::PlamoHttpVersion;
+use crate::plamo_scheme::PlamoScheme;
+use crate::plamo_string::{PlamoString, plamo_string_new};
 use std::os::raw::c_char;
 
 #[repr(C)]
