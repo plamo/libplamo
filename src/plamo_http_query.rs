@@ -32,9 +32,19 @@ pub extern fn plamo_http_query_get(plamo_http_query: *const PlamoHttpQuery, key:
 pub extern fn plamo_http_query_add(plamo_http_query: *mut PlamoHttpQuery, key: *const c_char, value: *const c_char) {
     unsafe {
         match (*plamo_http_query).get_mut(CStr::from_ptr(key)) {
-            Some(plamo_string_array) => plamo_string_array.push(CString::from_raw(value as *mut _)),
+            Some(plamo_string_array) => {
+                if value.is_null() {
+                    plamo_string_array.push(CString::new("").unwrap());
+                } else {
+                    plamo_string_array.push(CString::from_raw(value as *mut _));
+                }
+            },
             None => {
-                (*plamo_http_query).insert(CString::from_raw(key as *mut _), vec![CString::from_raw(value as *mut _)] );
+                if value.is_null() {
+                    (*plamo_http_query).insert(CString::from_raw(key as *mut _), vec![CString::new("").unwrap()] );
+                } else {
+                    (*plamo_http_query).insert(CString::from_raw(key as *mut _), vec![CString::from_raw(value as *mut _)] );
+                }
             },
         }
     }
