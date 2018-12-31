@@ -1,5 +1,5 @@
 use crate::plamo_byte_array::PlamoByteArray;
-use crate::plamo_http_header::{PlamoHttpHeader, plamo_http_header_new};
+use crate::plamo_http_header::PlamoHttpHeader;
 use crate::plamo_http_query::PlamoHttpQuery;
 use crate::plamo_http_version::PlamoHttpVersion;
 use crate::plamo_scheme::PlamoScheme;
@@ -24,6 +24,7 @@ pub extern fn plamo_request_new(
     path: *const c_char,
     version: PlamoHttpVersion,
     query: *const PlamoHttpQuery,
+    header: *const PlamoHttpHeader,
     body: *const PlamoByteArray,
 ) -> *mut PlamoRequest {
     Box::into_raw(Box::new(PlamoRequest {
@@ -32,7 +33,7 @@ pub extern fn plamo_request_new(
         path: plamo_string_new(path),
         version: version,
         query: query,
-        header: plamo_http_header_new(),
+        header: header,
         body: body,
     }))
 }
