@@ -63,7 +63,7 @@ extern "C" {
     const PlamoHttpHeader *header;
     const PlamoByteArray *body;
   } PlamoRequest;
-  PlamoRequest* plamo_request_new(const char *method, PlamoScheme scheme, const char *path, PlamoHttpVersion version, const PlamoByteArray *body);
+  PlamoRequest* plamo_request_new(const char *method, PlamoScheme scheme, const char *path, PlamoHttpVersion version, const PlamoHttpQuery *query, const PlamoByteArray *body);
   void plamo_request_destroy(PlamoRequest *plamo_request);
 
   typedef struct PlamoResponse {
