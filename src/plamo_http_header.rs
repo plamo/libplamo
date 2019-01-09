@@ -31,11 +31,13 @@ pub extern fn plamo_http_header_get(plamo_http_header: *const PlamoHttpHeader, k
 #[no_mangle]
 pub extern fn plamo_http_header_add(plamo_http_header: *mut PlamoHttpHeader, key: *const c_char, value: *const c_char) {
     unsafe {
-        match (*plamo_http_header).get_mut(CStr::from_ptr(key)) {
-            Some(plamo_string_array) => plamo_string_array.push(CString::from_raw(value as *mut _)),
-            None => {
-                (*plamo_http_header).insert(CString::from_raw(key as *mut _), vec![CString::from_raw(value as *mut _)] );
-            },
+        if !key.is_null() && !value.is_null() {
+            match (*plamo_http_header).get_mut(CStr::from_ptr(key)) {
+                Some(plamo_string_array) => plamo_string_array.push(CStr::from_ptr(value).to_owned()),
+                None => {
+                    (*plamo_http_header).insert(CStr::from_ptr(key).to_owned(), vec![CStr::from_ptr(value).to_owned()] );
+                },
+            }
         }
     }
 }

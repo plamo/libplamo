@@ -36,14 +36,14 @@ pub extern fn plamo_http_query_add(plamo_http_query: *mut PlamoHttpQuery, key: *
                 if value.is_null() {
                     plamo_string_array.push(CString::new("").unwrap());
                 } else {
-                    plamo_string_array.push(CString::from_raw(value as *mut _));
+                    plamo_string_array.push(CStr::from_ptr(value).to_owned());
                 }
             },
             None => {
                 if value.is_null() {
-                    (*plamo_http_query).insert(CString::from_raw(key as *mut _), vec![CString::new("").unwrap()] );
+                    (*plamo_http_query).insert(CStr::from_ptr(key).to_owned(), vec![CString::new("").unwrap()] );
                 } else {
-                    (*plamo_http_query).insert(CString::from_raw(key as *mut _), vec![CString::from_raw(value as *mut _)] );
+                    (*plamo_http_query).insert(CStr::from_ptr(key).to_owned(), vec![CStr::from_ptr(value).to_owned()] );
                 }
             },
         }

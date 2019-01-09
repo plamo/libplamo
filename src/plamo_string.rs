@@ -1,4 +1,4 @@
-use std::ffi::CString;
+use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 
 pub type PlamoString = CString;
@@ -6,7 +6,7 @@ pub type PlamoString = CString;
 #[no_mangle]
 pub extern fn plamo_string_new(value: *const c_char) -> *mut PlamoString {
     unsafe {
-        Box::into_raw(Box::new(CString::from_raw(value as *mut c_char)))
+        Box::into_raw(Box::new(CStr::from_ptr(value).to_owned()))
     }
 }
 
