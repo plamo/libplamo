@@ -76,10 +76,10 @@ extern "C" {
   void plamo_response_destroy(PlamoResponse *plamo_response);
 
   typedef struct PlamoMiddleware {
-    const void *body;
+    const void *config;
     bool (**callback)(const void*, const PlamoRequest*, PlamoResponse*);
   } PlamoMiddleware;
-  PlamoMiddleware* plamo_middleware_new(const void *body, bool (*callback)(const void*, const PlamoRequest*, PlamoResponse*));
+  PlamoMiddleware* plamo_middleware_new(const void *config, bool (*callback)(const void*, const PlamoRequest*, PlamoResponse*));
   void plamo_middleware_destroy(PlamoMiddleware *plamo_middleware);
 
   typedef struct PlamoApp PlamoApp;
