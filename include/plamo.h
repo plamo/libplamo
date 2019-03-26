@@ -8,15 +8,15 @@ extern "C" {
 #endif
 
   typedef enum PlamoScheme {
-    Http,
-    Https,
+    PlamoSchemeHttp,
+    PlamoSchemeHttps,
   } PlamoScheme;
 
   typedef enum PlamoHttpVersion {
-    Http09,
-    Http10,
-    Http11,
-    Http20,
+    PlamoHttpVersionHttp09,
+    PlamoHttpVersionHttp10,
+    PlamoHttpVersionHttp11,
+    PlamoHttpVersionHttp20,
   } PlamoHttpVersion;
 
   typedef struct PlamoString PlamoString;

@@ -1,5 +1,5 @@
 #[repr(C)]
 pub enum PlamoScheme {
-    Http,
-    Https,
+    PlamoSchemeHttp,
+    PlamoSchemeHttps,
 }
