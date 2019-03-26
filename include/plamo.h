@@ -56,15 +56,15 @@ extern "C" {
   bool plamo_http_query_remove(PlamoHttpQuery *plamo_http_query, const char *key);
 
   typedef struct PlamoRequest {
-    const PlamoString *method;
     PlamoScheme scheme;
-    const PlamoString *path;
     PlamoHttpVersion version;
+    const PlamoString *method;
+    const PlamoString *path;
     const PlamoHttpQuery *query;
     const PlamoHttpHeader *header;
     const PlamoByteArray *body;
   } PlamoRequest;
-  PlamoRequest* plamo_request_new(const char *method, PlamoScheme scheme, const char *path, PlamoHttpVersion version, const PlamoHttpQuery *query, const PlamoHttpHeader *header, const PlamoByteArray *body);
+  PlamoRequest* plamo_request_new(PlamoScheme scheme, PlamoHttpVersion version, const char *method, const char *path, const PlamoHttpQuery *query, const PlamoHttpHeader *header, const PlamoByteArray *body);
   void plamo_request_destroy(PlamoRequest *plamo_request);
 
   typedef struct PlamoResponse {

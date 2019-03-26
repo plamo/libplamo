@@ -8,10 +8,10 @@ use std::os::raw::c_char;
 
 #[repr(C)]
 pub struct PlamoRequest {
-    method: *const PlamoString,
     scheme: PlamoScheme,
-    path: *const PlamoString,
     version: PlamoHttpVersion,
+    method: *const PlamoString,
+    path: *const PlamoString,
     query: *const PlamoHttpQuery,
     header: *const PlamoHttpHeader,
     body: *const PlamoByteArray,
@@ -19,19 +19,19 @@ pub struct PlamoRequest {
 
 #[no_mangle]
 pub extern fn plamo_request_new(
-    method: *const c_char,
     scheme: PlamoScheme,
-    path: *const c_char,
     version: PlamoHttpVersion,
+    method: *const c_char,
+    path: *const c_char,
     query: *const PlamoHttpQuery,
     header: *const PlamoHttpHeader,
     body: *const PlamoByteArray,
 ) -> *mut PlamoRequest {
     Box::into_raw(Box::new(PlamoRequest {
-        method: plamo_string_new(method),
         scheme: scheme,
-        path: plamo_string_new(path),
         version: version,
+        method: plamo_string_new(method),
+        path: plamo_string_new(path),
         query: query,
         header: header,
         body: body,
