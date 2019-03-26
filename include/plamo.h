@@ -21,7 +21,7 @@ extern "C" {
 
   typedef struct PlamoString PlamoString;
   PlamoString* plamo_string_new(const char *value);
-  void plamo_string_destroy(PlamoString plamo_string);
+  void plamo_string_destroy(PlamoString *plamo_string);
   const char* plamo_string_get_char(const PlamoString *plamo_string);
 
   typedef struct PlamoStringArray PlamoStringArray;
