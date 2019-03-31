@@ -23,7 +23,9 @@ pub extern fn plamo_response_new() -> *mut PlamoResponse {
 pub extern fn plamo_response_destroy(plamo_response: *mut PlamoResponse) {
     unsafe {
         drop(Box::from_raw((*plamo_response).header as *mut PlamoHttpHeader));
-        drop(Box::from_raw((*plamo_response).body as *mut PlamoByteArray));
+        if !(*plamo_response).body.is_null() {
+            drop(Box::from_raw((*plamo_response).body as *mut PlamoByteArray));
+        }
         drop(Box::from_raw(plamo_response));
     }
 }
