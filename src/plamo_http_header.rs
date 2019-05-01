@@ -19,18 +19,18 @@ pub extern fn plamo_http_header_destroy(plamo_http_header: *mut PlamoHttpHeader)
 }
 
 #[no_mangle]
-pub extern fn plamo_http_header_for_each(plamo_http_header: *const PlamoHttpHeader, callback: extern fn(*const c_char, *const PlamoStringArray)) {
+pub extern fn plamo_http_header_for_each(plamo_http_header: *mut PlamoHttpHeader, callback: extern fn(*const c_char, *mut PlamoStringArray)) {
     unsafe {
-        (*plamo_http_header).iter().for_each(|(key, values)| callback(key.as_ptr(), values));
+        (*plamo_http_header).iter_mut().for_each(|(key, values)| callback(key.as_ptr(), values));
     }
 }
 
 #[no_mangle]
-pub extern fn plamo_http_header_get(plamo_http_header: *const PlamoHttpHeader, key: *const c_char) -> *const PlamoStringArray {
+pub extern fn plamo_http_header_get(plamo_http_header: *mut PlamoHttpHeader, key: *const c_char) -> *mut PlamoStringArray {
     unsafe {
-        match (*plamo_http_header).get(CStr::from_ptr(key)) {
+        match (*plamo_http_header).get_mut(CStr::from_ptr(key)) {
             Some(values) => values,
-            None => ptr::null(),
+            None => ptr::null_mut(),
         }
     }
 }

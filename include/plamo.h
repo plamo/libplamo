@@ -43,15 +43,15 @@ extern "C" {
   typedef struct PlamoHttpHeader PlamoHttpHeader;
   PlamoHttpHeader* plamo_http_header_new(void);
   void plamo_http_header_destroy(PlamoHttpHeader *plamo_http_header);
-  void plamo_http_header_for_each(const PlamoHttpHeader *plamo_http_header, void (*callback)(const char*, const PlamoStringArray*));
-  const PlamoStringArray* plamo_http_header_get(const PlamoHttpHeader *plamo_http_header, const char *key);
+  void plamo_http_header_for_each(PlamoHttpHeader *plamo_http_header, void (*callback)(const char*, PlamoStringArray*));
+  PlamoStringArray* plamo_http_header_get(PlamoHttpHeader *plamo_http_header, const char *key);
   void plamo_http_header_add(PlamoHttpHeader *plamo_http_header, const char *key, const char *value);
   bool plamo_http_header_remove(PlamoHttpHeader *plamo_http_header, const char *key);
 
   typedef struct PlamoHttpQuery PlamoHttpQuery;
   PlamoHttpQuery* plamo_http_query_new(void);
   void plamo_http_query_destroy(PlamoHttpQuery *plamo_http_query);
-  const PlamoStringArray* plamo_http_query_get(const PlamoHttpQuery *plamo_http_query, const char *key);
+  PlamoStringArray* plamo_http_query_get(PlamoHttpQuery *plamo_http_query, const char *key);
   void plamo_http_query_add(PlamoHttpQuery *plamo_http_query, const char *key, const char *value);
   bool plamo_http_query_remove(PlamoHttpQuery *plamo_http_query, const char *key);
 

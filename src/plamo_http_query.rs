@@ -19,11 +19,11 @@ pub extern fn plamo_http_query_destroy(plamo_http_query: *mut PlamoHttpQuery) {
 }
 
 #[no_mangle]
-pub extern fn plamo_http_query_get(plamo_http_query: *const PlamoHttpQuery, key: *const c_char) -> *const PlamoStringArray {
+pub extern fn plamo_http_query_get(plamo_http_query: *mut PlamoHttpQuery, key: *const c_char) -> *mut PlamoStringArray {
     unsafe {
-        match (*plamo_http_query).get(CStr::from_ptr(key)) {
+        match (*plamo_http_query).get_mut(CStr::from_ptr(key)) {
             Some(values) => values,
-            None => ptr::null(),
+            None => ptr::null_mut(),
         }
     }
 }
