@@ -43,9 +43,6 @@ pub extern fn plamo_request_destroy(plamo_request: *mut PlamoRequest) {
     unsafe {
         drop(Box::from_raw((*plamo_request).method as *mut PlamoString));
         drop(Box::from_raw((*plamo_request).path as *mut PlamoString));
-        drop(Box::from_raw((*plamo_request).query as *mut PlamoHttpQuery));
-        drop(Box::from_raw((*plamo_request).header as *mut PlamoHttpHeader));
-        drop(Box::from_raw((*plamo_request).body as *mut PlamoByteArray));
         drop(Box::from_raw(plamo_request));
     }
 }
