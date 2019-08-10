@@ -58,19 +58,19 @@ extern "C" {
   typedef struct PlamoRequest {
     PlamoScheme scheme;
     PlamoHttpVersion version;
-    const PlamoString *method;
-    const PlamoString *path;
-    const PlamoHttpQuery *query;
-    const PlamoHttpHeader *header;
-    const PlamoByteArray *body;
+    PlamoString *method;
+    PlamoString *path;
+    PlamoHttpQuery *query;
+    PlamoHttpHeader *header;
+    PlamoByteArray *body;
   } PlamoRequest;
-  PlamoRequest* plamo_request_new(PlamoScheme scheme, PlamoHttpVersion version, const char *method, const char *path, const PlamoHttpQuery *query, const PlamoHttpHeader *header, const PlamoByteArray *body);
+  PlamoRequest* plamo_request_new(PlamoScheme scheme, PlamoHttpVersion version, const char *method, const char *path, PlamoHttpQuery *query, PlamoHttpHeader *header, PlamoByteArray *body);
   void plamo_request_destroy(PlamoRequest *plamo_request);
 
   typedef struct PlamoResponse {
     unsigned int status_code;
-    const PlamoHttpHeader *header;
-    const PlamoByteArray *body;
+    PlamoHttpHeader *header;
+    PlamoByteArray *body;
   } PlamoResponse;
   PlamoResponse* plamo_response_new(void);
   void plamo_response_destroy(PlamoResponse *plamo_response);

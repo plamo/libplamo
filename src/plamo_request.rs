@@ -10,22 +10,22 @@ use std::os::raw::c_char;
 pub struct PlamoRequest {
     scheme: PlamoScheme,
     version: PlamoHttpVersion,
-    method: *const PlamoString,
-    path: *const PlamoString,
-    query: *const PlamoHttpQuery,
-    header: *const PlamoHttpHeader,
-    body: *const PlamoByteArray,
+    method: *mut PlamoString,
+    path: *mut PlamoString,
+    query: *mut PlamoHttpQuery,
+    header: *mut PlamoHttpHeader,
+    body: *mut PlamoByteArray,
 }
 
 #[no_mangle]
 pub extern fn plamo_request_new(
     scheme: PlamoScheme,
     version: PlamoHttpVersion,
-    method: *const c_char,
-    path: *const c_char,
-    query: *const PlamoHttpQuery,
-    header: *const PlamoHttpHeader,
-    body: *const PlamoByteArray,
+    method: *mut c_char,
+    path: *mut c_char,
+    query: *mut PlamoHttpQuery,
+    header: *mut PlamoHttpHeader,
+    body: *mut PlamoByteArray,
 ) -> *mut PlamoRequest {
     Box::into_raw(Box::new(PlamoRequest {
         scheme: scheme,
