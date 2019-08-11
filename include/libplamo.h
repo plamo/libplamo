@@ -77,9 +77,9 @@ extern "C" {
 
   typedef struct PlamoMiddleware {
     const void *config;
-    bool (*callback)(const void*, const PlamoRequest*, PlamoResponse*);
+    void (*callback)(const void*, const PlamoRequest*, PlamoResponse*);
   } PlamoMiddleware;
-  PlamoMiddleware* plamo_middleware_new(const void *config, bool (*callback)(const void*, const PlamoRequest*, PlamoResponse*));
+  PlamoMiddleware* plamo_middleware_new(const void *config, void (*callback)(const void*, const PlamoRequest*, PlamoResponse*));
   void plamo_middleware_destroy(PlamoMiddleware *plamo_middleware);
 
   typedef struct PlamoApp PlamoApp;

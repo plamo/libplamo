@@ -34,7 +34,8 @@ pub extern fn plamo_app_execute(plamo_app: *const PlamoApp, plamo_request: *cons
 
     unsafe {
         for middleware in &(*plamo_app).middlewares {
-            if !((**middleware).callback)((**middleware).config, plamo_request, plamo_response) {
+            ((**middleware).callback)((**middleware).config, plamo_request, plamo_response);
+            if (*plamo_response).status_code >= 300 {
                 break;
             }
         }

@@ -5,9 +5,9 @@ use std::ptr;
 
 #[repr(C)]
 pub struct PlamoResponse {
-    status_code: c_uint,
-    header: *mut PlamoHttpHeader,
-    body: *mut PlamoByteArray,
+    pub status_code: c_uint,
+    pub header: *mut PlamoHttpHeader,
+    pub body: *mut PlamoByteArray,
 }
 
 #[no_mangle]
