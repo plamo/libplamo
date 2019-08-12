@@ -1,10 +1,11 @@
+use crate::plamo_string::PlamoString;
 use crate::plamo_string_array::PlamoStringArray;
 use std::collections::BTreeMap;
-use std::ffi::{CStr, CString};
+use std::ffi::CStr;
 use std::os::raw::c_char;
 use std::ptr;
 
-pub type PlamoHttpHeader = BTreeMap<CString, PlamoStringArray>;
+pub type PlamoHttpHeader = BTreeMap<PlamoString, PlamoStringArray>;
 
 #[no_mangle]
 pub extern fn plamo_http_header_new() -> *mut PlamoHttpHeader {

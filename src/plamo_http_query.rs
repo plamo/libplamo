@@ -1,10 +1,11 @@
 use crate::plamo_string_array::PlamoStringArray;
+use crate::plamo_string::PlamoString;
 use std::collections::BTreeMap;
-use std::ffi::{CStr, CString};
+use std::ffi::CStr;
 use std::os::raw::c_char;
 use std::ptr;
 
-pub type PlamoHttpQuery = BTreeMap<CString, PlamoStringArray>;
+pub type PlamoHttpQuery = BTreeMap<PlamoString, PlamoStringArray>;
 
 #[no_mangle]
 pub extern fn plamo_http_query_new() -> *mut PlamoHttpQuery {
@@ -34,14 +35,14 @@ pub extern fn plamo_http_query_add(plamo_http_query: *mut PlamoHttpQuery, key: *
         match (*plamo_http_query).get_mut(CStr::from_ptr(key)) {
             Some(plamo_string_array) => {
                 if value.is_null() {
-                    plamo_string_array.push(CString::new("").unwrap());
+                    plamo_string_array.push(PlamoString::new("").unwrap());
                 } else {
                     plamo_string_array.push(CStr::from_ptr(value).to_owned());
                 }
             },
             None => {
                 if value.is_null() {
-                    (*plamo_http_query).insert(CStr::from_ptr(key).to_owned(), vec![CString::new("").unwrap()] );
+                    (*plamo_http_query).insert(CStr::from_ptr(key).to_owned(), vec![PlamoString::new("").unwrap()] );
                 } else {
                     (*plamo_http_query).insert(CStr::from_ptr(key).to_owned(), vec![CStr::from_ptr(value).to_owned()] );
                 }

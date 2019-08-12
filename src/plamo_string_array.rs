@@ -1,8 +1,9 @@
-use std::ffi::{CStr, CString};
+use std::ffi::CStr;
 use std::os::raw::c_char;
 use std::ptr;
+use crate::plamo_string::PlamoString;
 
-pub type PlamoStringArray = Vec<CString>;
+pub type PlamoStringArray = Vec<PlamoString>;
 
 #[no_mangle]
 pub extern fn plamo_string_array_new() -> *mut PlamoStringArray {
