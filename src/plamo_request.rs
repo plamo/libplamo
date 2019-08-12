@@ -28,13 +28,13 @@ pub extern fn plamo_request_new(
     body: *mut PlamoByteArray,
 ) -> *mut PlamoRequest {
     Box::into_raw(Box::new(PlamoRequest {
-        scheme: scheme,
-        version: version,
+        scheme,
+        version,
+        query,
+        header,
+        body,
         method: plamo_string_new(method),
         path: plamo_string_new(path),
-        query: query,
-        header: header,
-        body: body,
     }))
 }
 

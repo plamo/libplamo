@@ -11,8 +11,8 @@ pub struct PlamoMiddleware {
 #[no_mangle]
 pub extern fn plamo_middleware_new(config: *const c_void, callback: extern "C" fn(*const c_void, *const PlamoRequest, *mut PlamoResponse)) -> *mut PlamoMiddleware {
     Box::into_raw(Box::new(PlamoMiddleware {
-        config: config,
-        callback: callback,
+        config,
+        callback,
     }))
 }
 
