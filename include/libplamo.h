@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,16 +56,33 @@ extern "C" {
   void plamo_http_query_add(PlamoHttpQuery *plamo_http_query, const char *key, const char *value);
   bool plamo_http_query_remove(PlamoHttpQuery *plamo_http_query, const char *key);
 
+  typedef size_t PlamoDefinedHttpMethod;
+  #define PLAMO_HTTP_METHOD_GET SIZE_MAX
+  #define PLAMO_HTTP_METHOD_POST SIZE_MAX - 1
+  #define PLAMO_HTTP_METHOD_PUT SIZE_MAX - 2
+  #define PLAMO_HTTP_METHOD_DELETE SIZE_MAX - 3
+  #define PLAMO_HTTP_METHOD_HEAD SIZE_MAX - 4
+  #define PLAMO_HTTP_METHOD_CONNECT SIZE_MAX - 5
+  #define PLAMO_HTTP_METHOD_OPTIONS SIZE_MAX - 6
+  #define PLAMO_HTTP_METHOD_TRACE SIZE_MAX - 7
+  #define PLAMO_HTTP_METHOD_PATCH SIZE_MAX - 8
+  typedef union PlamoHttpMethod {
+    PlamoDefinedHttpMethod defined_http_method;
+    char *undefined_http_method;
+  } PlamoHttpMethod;
+  PlamoHttpMethod plamo_http_method_new(size_t method);
+  void plamo_http_method_destroy(PlamoHttpMethod *plamo_http_method);
+
   typedef struct PlamoRequest {
     PlamoScheme scheme;
     PlamoHttpVersion version;
-    PlamoString *method;
+    PlamoHttpMethod method;
     PlamoString *path;
     PlamoHttpQuery *query;
     PlamoHttpHeader *header;
     PlamoByteArray *body;
   } PlamoRequest;
-  PlamoRequest* plamo_request_new(PlamoScheme scheme, PlamoHttpVersion version, const char *method, const char *path, PlamoHttpQuery *query, PlamoHttpHeader *header, PlamoByteArray *body);
+  PlamoRequest* plamo_request_new(PlamoScheme scheme, PlamoHttpVersion version, PlamoHttpMethod method, const char *path, PlamoHttpQuery *query, PlamoHttpHeader *header, PlamoByteArray *body);
   void plamo_request_destroy(PlamoRequest *plamo_request);
 
   typedef struct PlamoResponse {
