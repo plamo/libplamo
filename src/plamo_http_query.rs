@@ -20,6 +20,15 @@ pub extern fn plamo_http_query_destroy(plamo_http_query: *mut PlamoHttpQuery) {
 }
 
 #[no_mangle]
+pub extern fn plamo_http_query_for_each(plamo_http_query: *mut PlamoHttpQuery, callback: extern fn(*const c_char, *const c_char)) {
+    unsafe {
+        (*plamo_http_query).iter().for_each(|(key, values)| {
+            values.iter().for_each(|value| callback(key.as_ptr(), value.as_ptr()));
+        });
+    }
+}
+
+#[no_mangle]
 pub extern fn plamo_http_query_get(plamo_http_query: *mut PlamoHttpQuery, key: *const c_char) -> *mut PlamoStringArray {
     unsafe {
         match (*plamo_http_query).get_mut(CStr::from_ptr(key)) {

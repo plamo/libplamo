@@ -52,6 +52,7 @@ extern "C" {
   typedef struct PlamoHttpQuery PlamoHttpQuery;
   PlamoHttpQuery* plamo_http_query_new(void);
   void plamo_http_query_destroy(PlamoHttpQuery *plamo_http_query);
+  void plamo_http_query_for_each(PlamoHttpQuery *plamo_http_query, void (*callback)(const char*, const char*));
   PlamoStringArray* plamo_http_query_get(PlamoHttpQuery *plamo_http_query, const char *key);
   void plamo_http_query_add(PlamoHttpQuery *plamo_http_query, const char *key, const char *value);
   bool plamo_http_query_remove(PlamoHttpQuery *plamo_http_query, const char *key);
