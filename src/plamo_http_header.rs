@@ -20,9 +20,11 @@ pub extern fn plamo_http_header_destroy(plamo_http_header: *mut PlamoHttpHeader)
 }
 
 #[no_mangle]
-pub extern fn plamo_http_header_for_each(plamo_http_header: *mut PlamoHttpHeader, callback: extern fn(*const c_char, *mut PlamoStringArray)) {
+pub extern fn plamo_http_header_for_each(plamo_http_header: *mut PlamoHttpHeader, callback: extern fn(*const c_char, *const c_char)) {
     unsafe {
-        (*plamo_http_header).iter_mut().for_each(|(key, values)| callback(key.as_ptr(), values));
+        (*plamo_http_header).iter().for_each(|(key, values)| {
+            values.iter().for_each(|value| callback(key.as_ptr(), value.as_ptr()));
+        });
     }
 }
 

@@ -44,7 +44,7 @@ extern "C" {
   typedef struct PlamoHttpHeader PlamoHttpHeader;
   PlamoHttpHeader* plamo_http_header_new(void);
   void plamo_http_header_destroy(PlamoHttpHeader *plamo_http_header);
-  void plamo_http_header_for_each(PlamoHttpHeader *plamo_http_header, void (*callback)(const char*, PlamoStringArray*));
+  void plamo_http_header_for_each(PlamoHttpHeader *plamo_http_header, void (*callback)(const char*, const char*));
   PlamoStringArray* plamo_http_header_get(PlamoHttpHeader *plamo_http_header, const char *key);
   void plamo_http_header_add(PlamoHttpHeader *plamo_http_header, const char *key, const char *value);
   bool plamo_http_header_remove(PlamoHttpHeader *plamo_http_header, const char *key);
