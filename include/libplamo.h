@@ -95,6 +95,12 @@ extern "C" {
   PlamoResponse* plamo_response_new(void);
   void plamo_response_destroy(PlamoResponse *plamo_response);
 
+  typedef struct PlamoFormUrlencoded PlamoFormUrlencoded;
+  PlamoFormUrlencoded* plamo_form_urlencoded_new(const PlamoRequest *plamo_request);
+  void plamo_form_urlencoded_destroy(PlamoFormUrlencoded *plamo_form_urlencoded);
+  void plamo_form_urlencoded_for_each(const PlamoFormUrlencoded *plamo_form_urlencoded, void (*callback)(const char*, const char*));
+  const PlamoStringArray* plamo_form_urlencoded_get(const PlamoFormUrlencoded *plamo_form_urlencoded, const char *key);
+
   typedef struct PlamoMiddleware {
     const void *config;
     void (*callback)(const void*, const PlamoRequest*, PlamoResponse*);

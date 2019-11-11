@@ -16,6 +16,7 @@ name = "plamo"
 crate-type = ["cdylib"]
 
 [dependencies]
+url = "2.1.0"
 
 [profile.release]
 lto = true

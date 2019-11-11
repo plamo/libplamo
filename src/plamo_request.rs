@@ -9,13 +9,13 @@ use std::os::raw::c_char;
 
 #[repr(C)]
 pub struct PlamoRequest {
-    scheme: PlamoScheme,
-    version: PlamoHttpVersion,
-    method: PlamoHttpMethod,
-    path: *mut PlamoString,
-    query: *mut PlamoHttpQuery,
-    header: *mut PlamoHttpHeader,
-    body: *mut PlamoByteArray,
+    pub scheme: PlamoScheme,
+    pub version: PlamoHttpVersion,
+    pub method: PlamoHttpMethod,
+    pub path: *mut PlamoString,
+    pub query: *mut PlamoHttpQuery,
+    pub header: *mut PlamoHttpHeader,
+    pub body: *mut PlamoByteArray,
 }
 
 #[no_mangle]
