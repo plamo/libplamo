@@ -18,6 +18,13 @@ pub extern fn plamo_string_array_destroy(plamo_string_array: *mut PlamoStringArr
 }
 
 #[no_mangle]
+pub extern fn plamo_string_array_length(plamo_string_array: *const PlamoStringArray) -> usize {
+    unsafe {
+        (*plamo_string_array).len()
+    }
+}
+
+#[no_mangle]
 pub extern fn plamo_string_array_for_each(plamo_string_array: *const PlamoStringArray, callback: extern fn(*const c_char)) {
     unsafe {
         (*plamo_string_array).iter().for_each(|value| callback(value.as_ptr()));

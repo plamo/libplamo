@@ -28,6 +28,7 @@ extern "C" {
   typedef struct PlamoStringArray PlamoStringArray;
   PlamoStringArray* plamo_string_array_new(void);
   void plamo_string_array_destroy(PlamoStringArray *plamo_string_array);
+  size_t plamo_string_array_length(const PlamoStringArray *plamo_string_array);
   void plamo_string_array_for_each(const PlamoStringArray *plamo_string_array, void (*callback)(const char*));
   const char* plamo_string_array_get_at(const PlamoStringArray *plamo_string_array, size_t index);
   const char* plamo_string_array_get_first(const PlamoStringArray *plamo_string_array);
