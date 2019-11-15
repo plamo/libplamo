@@ -101,6 +101,30 @@ extern "C" {
   void plamo_form_urlencoded_for_each(const PlamoFormUrlencoded *plamo_form_urlencoded, void (*callback)(const char*, const char*));
   const PlamoStringArray* plamo_form_urlencoded_get(const PlamoFormUrlencoded *plamo_form_urlencoded, const char *key);
 
+  typedef struct PlamoFormDataFile PlamoFormDataFile;
+  const char* plamo_form_data_file_get_content_type(const PlamoFormDataFile *plamo_form_data_file);
+  const char* plamo_form_data_file_get_file_name(const PlamoFormDataFile *plamo_form_data_file);
+  const unsigned char* plamo_form_data_file_get_body(const PlamoFormDataFile *plamo_form_data_file);
+  size_t plamo_form_data_file_get_body_size(const PlamoFormDataFile *plamo_form_data_file);
+
+  typedef struct PlamoFormDataField {
+    PlamoString *text;
+    PlamoFormDataFile *file;
+  } PlamoFormDataField;
+
+  typedef struct PlamoFormDataFieldArray PlamoFormDataFieldArray;
+  size_t plamo_form_data_field_array_length(const PlamoFormDataFieldArray *plamo_form_data_field_array);
+  void plamo_form_data_field_array_for_each(const PlamoFormDataFieldArray *plamo_form_data_field_array, void (*callback)(const PlamoFormDataField*));
+  const PlamoFormDataField* plamo_form_data_field_array_get_at(const PlamoFormDataFieldArray *plamo_form_data_field_array, size_t index);
+  const PlamoFormDataField* plamo_form_data_field_array_get_first(const PlamoFormDataFieldArray *plamo_form_data_field_array);
+  const PlamoFormDataField* plamo_form_data_field_array_get_last(const PlamoFormDataFieldArray *plamo_form_data_field_array);
+
+  typedef struct PlamoFormData PlamoFormData;
+  PlamoFormData* plamo_form_data_new(const PlamoRequest *plamo_request);
+  void plamo_form_data_destroy(PlamoFormData *plamo_form_data);
+  void plamo_form_data_for_each(const PlamoFormData *plamo_form_data, void (*callback)(const char*, const PlamoFormDataField*));
+  const PlamoFormDataFieldArray* plamo_form_data_get(const PlamoFormData *plamo_form_data, const char *key);
+
   typedef struct PlamoMiddleware {
     const void *config;
     void (*callback)(const void*, const PlamoRequest*, PlamoResponse*);

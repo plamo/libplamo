@@ -1,5 +1,9 @@
 pub mod plamo_app;
 pub mod plamo_byte_array;
+pub mod plamo_form_data;
+pub mod plamo_form_data_field;
+pub mod plamo_form_data_field_array;
+pub mod plamo_form_data_file;
 pub mod plamo_form_urlencoded;
 pub mod plamo_http_header;
 pub mod plamo_http_method;

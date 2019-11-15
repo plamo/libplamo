@@ -16,6 +16,7 @@ name = "plamo"
 crate-type = ["cdylib"]
 
 [dependencies]
+multipart = { version = "0.16.1", default-features = false, features = ["server"] }
 url = "2.1.0"
 
 [profile.release]
