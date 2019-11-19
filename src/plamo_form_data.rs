@@ -15,10 +15,13 @@ pub type PlamoFormData = BTreeMap<PlamoString, PlamoFormDataFieldArray>;
 pub extern fn plamo_form_data_new(plamo_request: *const PlamoRequest) -> *mut PlamoFormData {
     let mut plamo_form_data = PlamoFormData::new();
     if let Ok(mut multipart) = Multipart::from_request(unsafe { &*plamo_request }) {
-        multipart.foreach_entry(|mut entry| {
+        let mut failed = false;
+        let result = multipart.foreach_entry(|mut entry| {
             let mut buf = Vec::new();
-            entry.data.read_to_end(&mut buf).unwrap();
-
+            if entry.data.read_to_end(&mut buf).is_err() {
+                failed = true;
+                return
+            }
             let field = if let Some(content_type) = entry.headers.content_type {
                 let file = PlamoFormDataFile::new(
                     PlamoString::new(content_type.to_string()).unwrap(),
@@ -45,9 +48,16 @@ pub extern fn plamo_form_data_new(plamo_request: *const PlamoRequest) -> *mut Pl
                     plamo_form_data.insert(PlamoString::new(entry.headers.name.to_string()).unwrap(), vec![field]);
                 }
             }
-        }).unwrap();
+        });
+        if result.is_err() {
+            failed = true;
+        }
 
-        Box::into_raw(Box::new(plamo_form_data))
+        if failed {
+            std::ptr::null_mut()
+        } else {
+            Box::into_raw(Box::new(plamo_form_data))
+        }
     } else {
         std::ptr::null_mut()
     }
