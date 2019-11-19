@@ -1,6 +1,6 @@
 [package]
 name = "libplamo"
-version = "0.1.0"
+version = "0.3.0"
 authors = ["Shogo Otake <shogo.otake@gmail.com>"]
 license = "MIT"
 description = "Plamo is a web server interface for all the programming languages"
