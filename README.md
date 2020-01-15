@@ -1,3 +1,5 @@
+<p align="center"><img src="https://user-images.githubusercontent.com/1064585/72409087-200d5700-37a8-11ea-8412-3a29ed334f12.png"></p>
+
 # Plamo
 Plamo is a web server interface for all the programming languages.
 
@@ -10,4 +12,3 @@ make && make install
 MIT License
 ## Special Thanks
 [rust-jp](https://rust-jp.rs/) - Thanks to the slack community for answering questions.
-
